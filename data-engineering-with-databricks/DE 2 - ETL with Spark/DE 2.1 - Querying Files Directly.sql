@@ -170,6 +170,7 @@ SELECT * FROM event_view
 -- MAGIC ## Create Temporary References to Files
 -- MAGIC
 -- MAGIC Temporary views similarly alias queries to a name that's easier to reference in later queries.
+-- MAGIC
 
 -- COMMAND ----------
 
