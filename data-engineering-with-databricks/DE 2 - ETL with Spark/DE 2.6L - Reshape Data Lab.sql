@@ -101,12 +101,22 @@
 
 -- COMMAND ----------
 
+SELECT * FROM events
+
+-- COMMAND ----------
+
 -- TODO
 CREATE OR REPLACE TEMP VIEW events_pivot
-<FILL_IN>
-("cart", "pillows", "login", "main", "careers", "guest", "faq", "down", "warranty", "finalize", 
-"register", "shipping_info", "checkout", "mattresses", "add_item", "press", "email_coupon", 
-"cc_info", "foam", "reviews", "original", "delivery", "premium")
+AS 
+select * from (
+  SELECT user_id as user, event_name FROM events )
+PIVOT(
+  COUNT(user) FOR event_name IN 
+    ("cart", "pillows", "login", "main", "careers", "guest", "faq", "down", "warranty", "finalize", 
+  "register", "shipping_info", "checkout", "mattresses", "add_item", "press", "email_coupon", 
+  "cc_info", "foam", "reviews", "original", "delivery", "premium")
+)
+
 
 -- COMMAND ----------
 
@@ -118,10 +128,12 @@ CREATE OR REPLACE TEMP VIEW events_pivot
 -- COMMAND ----------
 
 -- MAGIC %python
--- MAGIC # TODO
--- MAGIC (spark.read
--- MAGIC     <FILL_IN>
--- MAGIC     .createOrReplaceTempView("events_pivot"))
+-- MAGIC (spark.read.table("events").groupBy("user_id").pivot("event_name").count().withColumnRenamed("user_id","user").createOrReplaceTempView("events_pivot"))
+
+-- COMMAND ----------
+
+-- MAGIC %python
+-- MAGIC display(spark.table("events_pivot"))
 
 -- COMMAND ----------
 

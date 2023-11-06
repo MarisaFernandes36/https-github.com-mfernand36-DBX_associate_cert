@@ -52,6 +52,10 @@
 
 -- COMMAND ----------
 
+select * from events_raw
+
+-- COMMAND ----------
+
 CREATE OR REPLACE TEMP VIEW events_strings AS 
 SELECT string(key), string(value) FROM events_raw;
 
@@ -153,6 +157,13 @@ SELECT * FROM parsed_events
 
 -- COMMAND ----------
 
+
+SELECT * 
+FROM parsed_events
+WHERE size(items) > 2
+
+-- COMMAND ----------
+
 CREATE OR REPLACE TEMP VIEW exploded_events AS
 SELECT *, explode(items) AS item
 FROM parsed_events;
@@ -222,6 +233,14 @@ GROUP BY user_id
 
 -- COMMAND ----------
 
+select * from sales
+
+-- COMMAND ----------
+
+select * from  item_lookup b
+
+-- COMMAND ----------
+
 CREATE OR REPLACE TEMP VIEW item_purchases AS
 
 SELECT * 
@@ -257,6 +276,10 @@ SELECT * FROM item_purchases
 -- MAGIC - Unique values in the pivot column are grouped and aggregated using the provided aggregate expression, creating a separate column for each unique value in the resulting pivot table.
 -- MAGIC
 -- MAGIC The following code cell uses **`PIVOT`** to flatten out the item purchase information contained in several fields derived from the **`sales`** dataset. This flattened data format can be useful for dashboarding, but also useful for applying machine learning algorithms for inference or prediction.
+
+-- COMMAND ----------
+
+select * from item_purchases
 
 -- COMMAND ----------
 

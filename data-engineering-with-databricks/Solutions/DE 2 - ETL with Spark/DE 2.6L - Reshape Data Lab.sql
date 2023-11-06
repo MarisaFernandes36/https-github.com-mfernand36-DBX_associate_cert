@@ -186,6 +186,14 @@ SELECT * FROM (
 
 -- COMMAND ----------
 
+create or replace temp view clickpaths as 
+select * 
+from events_pivot a
+join transactions b
+on a.user = b.user_id
+
+-- COMMAND ----------
+
 -- ANSWER
 CREATE OR REPLACE TEMP VIEW clickpaths AS
 SELECT * 
@@ -199,6 +207,29 @@ JOIN transactions b
 -- MAGIC %md
 -- MAGIC
 -- MAGIC ### Solve with Python
+
+-- COMMAND ----------
+
+-- MAGIC %python
+-- MAGIC events_pivot = spark.read.table("events_pivot")
+-- MAGIC transactions= spark.table("transactions")
+-- MAGIC
+-- MAGIC res= events_pivot.join(transactions,events_pivot.user==transactions.user_id )
+-- MAGIC display(res)
+
+-- COMMAND ----------
+
+-- MAGIC %python
+-- MAGIC from pyspark.sql.functions import col
+-- MAGIC
+-- MAGIC #spark.table("events_pivot").join(spark.table("transactions"), col("events_pivot.user")== col("transactions.user_id"),"inner").createOrReplaceTempView("clickpaths")
+-- MAGIC
+-- MAGIC #now with alais!
+-- MAGIC spark.table("events_pivot").alias("events").join(spark.table("transactions").alias("trans"), col("events.user")== col("trans.user_id"),"inner").createOrReplaceTempView("clickpaths")
+-- MAGIC
+-- MAGIC
+-- MAGIC display(spark.read.table("clickpaths"))
+-- MAGIC
 
 -- COMMAND ----------
 
